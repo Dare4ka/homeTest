@@ -19,22 +19,38 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
     	function loadData(desc) {
+
+                // обнуление содержания блока вывода
         document.getElementById("result").innerHTML = "";
+                // путь к файлу
         var requestURL = "data.json";
+                // создание запроса
         var request = new XMLHttpRequest();
+                // открытие запроса
         request.open('GET', requestURL);
+                // объявление формата
         request.responseType = 'json';
+                // отправка на сервер
         request.send();
+
+                // запуск события после возвращенного ответа
         request.onload = function() {
+                // полечение содержания ответа
           var items = request.response;
+                // объявление функции
           arrayFind(items);
         };
 
+                // функция сортировки
         function arrayFind(jsonObj) {
+                // извлечение масива
           var itemsArray = jsonObj['items'];
+                // значение рейтинга
           var rateItem;
+                // новый масив
           var itemsTop = [];
 
+                // сортировка по рейтингу
           for (var i = 0; i < itemsArray.length; i++) {
             rateItem = itemsArray[i].rate;
             if (rateItem >= 4) {
@@ -42,18 +58,23 @@
             };
           };
 
+                // функция для правильной сортировки цифровых значений в порядке убывания
           function compareNumbers(a, b) {
-            return a.price - b.price;
+            return b.price - a.price;
           };
 
+                // сортировка по цене
           itemsTop.sort(compareNumbers);
 
-          if (desc == true) {
+                // обрезка масива
+          itemsTop.splice(3);
+
+                // сортировка в обратном порядке
+          if (desc == false) {
             itemsTop.reverse();
           };
 
-          itemsTop.splice(3);
-
+                // вывод результата
           for (var i = 0; i < itemsTop.length; i++) {
             var p = document.createElement('p');
             p.innerHTML = itemsTop[i].title + " - " + itemsTop[i].price;
