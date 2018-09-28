@@ -19,8 +19,48 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
     	function loadData(desc) {
+        document.getElementById("result").innerHTML = "";
+        var requestURL = "data.json";
+        var request = new XMLHttpRequest();
+        request.open('GET', requestURL);
+        request.responseType = 'json';
+        request.send();
+        request.onload = function() {
+          var items = request.response;
+          arrayFind(items);
+        };
 
-    	}
+        function arrayFind(jsonObj) {
+          var itemsArray = jsonObj['items'];
+          var rateItem;
+          var itemsTop = [];
+
+          for (var i = 0; i < itemsArray.length; i++) {
+            rateItem = itemsArray[i].rate;
+            if (rateItem >= 4) {
+              itemsTop.push(itemsArray[i]);
+            };
+          };
+
+          function compareNumbers(a, b) {
+            return a.price - b.price;
+          };
+
+          itemsTop.sort(compareNumbers);
+
+          if (desc == true) {
+            itemsTop.reverse();
+          };
+
+          itemsTop.splice(3);
+
+          for (var i = 0; i < itemsTop.length; i++) {
+            var p = document.createElement('p');
+            p.innerHTML = itemsTop[i].title + " - " + itemsTop[i].price;
+            document.getElementById("result").appendChild(p);
+          };
+        };
+    	};
     </script>
   </head>
   <body>
